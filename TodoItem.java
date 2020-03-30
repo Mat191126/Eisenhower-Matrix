@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+
 /*### Class TodoItem
 
 __Attributes__
@@ -52,4 +54,7 @@ __Instance methods__
 
 public class TodoItem{
 
+    private String title;
+    private LocalDate deadline;
+    private boolean isDone;
 }
