@@ -70,6 +70,9 @@ public class TodoItem{
     public LocalDate getDeadline(){
         return deadline;
     }
+    public boolean getStatus(){
+        return isDone;
+    }
 
     public void mark(){
         isDone = true;

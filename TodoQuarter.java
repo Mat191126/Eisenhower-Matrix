@@ -1,3 +1,6 @@
+import java.time.LocalDate;
+import java.util.ArrayList;
+
 /*### Class TodoQuarter
 
 __Instance Attributes__
@@ -40,5 +43,48 @@ __Instance methods__
    2. [x] 11-6 submit assignment```*/
 
 public class TodoQuarter{
-    
+
+    private ArrayList<TodoItem> todoItems;
+
+    public TodoQuarter(){
+        this.todoItems = new ArrayList<>();
+    }
+
+    public void addItem(String title, LocalDate deadline){
+
+        TodoItem todoItem = new TodoItem(title, deadline);
+
+        todoItems.add(todoItem);
+    }
+
+    public void removeItem(int index){
+        todoItems.remove(index);
+    }
+
+    public void archiveItems(){
+        for (TodoItem todoItem : todoItems) {
+            if (todoItem.getStatus()){
+                todoItems.remove(todoItem);
+            }
+        }
+    }
+
+    public TodoItem getItem(int index){
+        return todoItems.get(index);
+    }
+
+    public ArrayList<TodoItem> getItems(){
+        return todoItems;
+    }
+
+    public String toString(){
+        int number = 0;
+        String todoQuarterString = "";
+        for (TodoItem todoItem : todoItems) {
+            String todoItemString = todoItem.toString();
+            number ++;
+            todoQuarterString += String.format("%s. %s\n", number, todoItemString);
+        }
+        return todoQuarterString;
+    }
 }
