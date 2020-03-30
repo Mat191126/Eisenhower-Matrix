@@ -62,12 +62,12 @@ public class TodoQuarter{
     }
 
     public void archiveItems(){
-        for (TodoItem todoItem : todoItems) {
-            if (todoItem.getStatus()){
-                todoItems.remove(todoItem);
-            }
-        }
-    }
+      for(int index = 0; index < todoItems.size(); index++) {
+        if(todoItems.get(index).getStatus()) {
+          todoItems.remove(index);
+        }       
+      }
+  }
 
     public TodoItem getItem(int index){
         return todoItems.get(index);

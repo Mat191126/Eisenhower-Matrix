@@ -56,7 +56,7 @@ public class Main {
                 System.out.println(todoMatrix.toString());
                 try{
                     String statusFromUser = takeInputfromUser("Choose quarter name (UI/NI/UN/NN): ");
-                    String indexFromUser = takeInputfromUser("Enter number of item mark: ");
+                    String indexFromUser = takeInputfromUser("Enter number of item to mark: ");
                     int indexFromUserInteger = Integer.parseInt(indexFromUser);
                     if (indexFromUserInteger -1 >= todoMatrix.getQuarter(statusFromUser).getItems().size()){
                         System.out.println("There is no index as entered");
