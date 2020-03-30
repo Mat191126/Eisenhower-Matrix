@@ -1,3 +1,6 @@
+import java.time.LocalDate;
+import java.util.HashMap;
+
 /*### Class TodoMatrix
 
 This is the file containing the logic of an Eisenhower todoMatrix.
@@ -67,5 +70,57 @@ __Instance methods__
   Returns a todoQuarters list (an Eisenhower todoMatrix) formatted to string.*/
 
 public class TodoMatrix{
-    
+
+    private HashMap<String, TodoQuarter> todoQuarters;
+
+    public TodoMatrix(){
+        todoQuarters = new HashMap<>();
+    }
+
+    public HashMap<String, TodoQuarter> getQuarters(){
+        return todoQuarters;
+    }
+
+    public TodoQuarter getQuarter(String status){
+        return todoQuarters.get(status);
+    }
+
+    public void addItem(String title, LocalDate deadline, boolean isImportant){
+        boolean isUrgent = false;
+            if (LocalDate.now().getMonthValue() == deadline.getMonthValue() && deadline.getDayOfMonth() - LocalDate.now().getDayOfMonth() < 4){
+                isUrgent = true;
+            }
+
+        String statusImportant = isImportant ? "I" : "N";
+        String statusUrgent = isUrgent ? "U" : "N";
+        String status = statusImportant + statusUrgent;
+
+            if (todoQuarters.containsKey(status)){
+                todoQuarters.get(status).addItem(title, deadline);
+                return;
+            }
+
+        TodoQuarter todoQuarter = new TodoQuarter();
+        todoQuarter.addItem(title, deadline);
+
+        todoQuarters.put(status, todoQuarter);
+    }
+
+    public void addItemsfromFile(String filename){
+
+    }
+    public void saveItemsToFile(String filename){
+
+    }
+
+    public void archiveItems(){
+        for (String todoQuarter : todoQuarters.keySet()) {
+            System.out.println(todoQuarter);
+        }
+    }
+
+    public String toString(){
+        String todoQuarterString = "";
+        return todoQuarterString;
+    }
 }
