@@ -1,0 +1,7 @@
+go walk|23-4|
+go to aunt|6-4|important
+buy ticket|23-4|important
+call mum|24-4|important
+make lunch|1-4|
+call Ania|1-4|
+end project|2-4|important

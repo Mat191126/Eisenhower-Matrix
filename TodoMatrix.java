@@ -1,3 +1,8 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.time.LocalDate;
 import java.util.HashMap;
 
@@ -87,13 +92,13 @@ public class TodoMatrix{
 
     public void addItem(String title, LocalDate deadline, boolean isImportant){
         boolean isUrgent = false;
-            if (LocalDate.now().getMonthValue() == deadline.getMonthValue() && deadline.getDayOfMonth() - LocalDate.now().getDayOfMonth() < 4){
+            if (deadline.getDayOfYear() - LocalDate.now().getDayOfYear() < 4){
                 isUrgent = true;
             }
 
         String statusImportant = isImportant ? "I" : "N";
         String statusUrgent = isUrgent ? "U" : "N";
-        String status = statusImportant + statusUrgent;
+        String status = statusUrgent + statusImportant;
 
             if (todoQuarters.containsKey(status)){
                 todoQuarters.get(status).addItem(title, deadline);
@@ -106,21 +111,65 @@ public class TodoMatrix{
         todoQuarters.put(status, todoQuarter);
     }
 
-    public void addItemsfromFile(String filename){
+    public void addItemsFromFile(String fileName) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
+          String line;
+          while ((line = bufferedReader.readLine()) != null) {
+            String[] values = line.split("\\|");
 
-    }
-    public void saveItemsToFile(String filename){
+            String[] dayMonth = values[1].split("-");
 
-    }
+            int day = Integer.parseInt(dayMonth[0]);
+            int month = Integer.parseInt(dayMonth[1]);
+    
+            String title = values[0];
+
+            LocalDate deadline = LocalDate.of(2020, month, day);
+
+            boolean isImportant = values.length > 2 ? true : false;
+
+            addItem(title, deadline, isImportant);
+          }
+        } catch (Exception e) {
+          System.out.println("Can't read file");
+        }
+      }
+    
+      public void saveItemsToFile(String fileName) {
+        try {
+          File file = new File(fileName);
+          FileWriter fileWriter = new FileWriter(file);
+          BufferedWriter writer = new BufferedWriter(fileWriter);
+    
+          for (String status : todoQuarters.keySet()) {
+            TodoQuarter todoQuarter = todoQuarters.get(status);
+            for (TodoItem todoItem : todoQuarter.getItems()) {
+              String line = String.format("%s|%d-%d|%s\n", todoItem.getTitle(), todoItem.getDeadline().getDayOfMonth(),
+                                         todoItem.getDeadline().getMonthValue(), status.charAt(0) == 'I' ? "important" : "");
+              writer.write(line);
+            }
+          }
+    
+          writer.close();
+        } 
+        catch (Exception e) {
+          System.out.println("Can't write to file");
+        }
+      }
 
     public void archiveItems(){
-        for (String todoQuarter : todoQuarters.keySet()) {
-            System.out.println(todoQuarter);
+        for (TodoQuarter todoQuarter : todoQuarters.values()) {
+            todoQuarter.archiveItems();
         }
     }
 
     public String toString(){
         String todoQuarterString = "";
+        for (String key : todoQuarters.keySet()) {
+            TodoQuarter todoQuarter = todoQuarters.get(key);
+            todoQuarterString += key + "\n";
+            todoQuarterString += todoQuarter.toString();
+        }
         return todoQuarterString;
     }
 }
