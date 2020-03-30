@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+
 /*### Class TodoItem
 
 __Attributes__
@@ -52,4 +54,35 @@ __Instance methods__
 
 public class TodoItem{
 
+    private String title;
+    private LocalDate deadline;
+    private boolean isDone;
+
+    public TodoItem(String title, LocalDate deadline){
+        this.title = title;
+        this.deadline = deadline;
+        isDone = false;
+    }
+
+    public String getTitle(){
+        return title;
+    }
+    public LocalDate getDeadline(){
+        return deadline;
+    }
+
+    public void mark(){
+        isDone = true;
+    }
+    public void unmark(){
+        isDone = false;
+    }
+
+    public String toString(){
+        String markCharacter = isDone ? "x" : " ";
+        int day = deadline.getDayOfMonth();
+        int month = deadline.getMonthValue();
+        String todoItemString = String.format("[%s] %s-%s %s", markCharacter, day, month, title);
+        return todoItemString;
+    }
 }
