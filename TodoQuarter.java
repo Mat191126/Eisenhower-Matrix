@@ -95,6 +95,7 @@ public class TodoQuarter{
             longestItemLength = todoItem.toString().length();
           }
       }
+
       return longestItemLength;
     }
 }

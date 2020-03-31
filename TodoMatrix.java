@@ -80,6 +80,10 @@ public class TodoMatrix{
 
     public TodoMatrix(){
         todoQuarters = new HashMap<>();
+        todoQuarters.put("UI", new TodoQuarter());
+        todoQuarters.put("NI", new TodoQuarter());
+        todoQuarters.put("NN", new TodoQuarter());
+        todoQuarters.put("UN", new TodoQuarter());
     }
 
     public HashMap<String, TodoQuarter> getQuarters(){
@@ -100,15 +104,12 @@ public class TodoMatrix{
         String statusUrgent = isUrgent ? "U" : "N";
         String status = statusUrgent + statusImportant;
 
-            if (todoQuarters.containsKey(status)){
-                todoQuarters.get(status).addItem(title, deadline);
-                return;
-            }
+        if (todoQuarters.containsKey(status)){
+            getQuarter(status).addItem(title, deadline);
+            return;
+        }
 
-        TodoQuarter todoQuarter = new TodoQuarter();
-        todoQuarter.addItem(title, deadline);
-
-        todoQuarters.put(status, todoQuarter);
+        getQuarter(status).addItem(title, deadline);
     }
 
     public void addItemsFromFile(String fileName) {
@@ -179,90 +180,132 @@ public class TodoMatrix{
       int longestItemLength = 0;
       for (String key : todoQuarters.keySet()) {
           TodoQuarter todoQuarter = todoQuarters.get(key);
-          longestItemLength = todoQuarter.findLongestItem();
+          if (longestItemLength < todoQuarter.findLongestItem()){
+            longestItemLength = todoQuarter.findLongestItem();
+          }
       }
-      if (longestItemLength % 2 == 1){
-        longestItemLength += 1;
-      }
+      if (longestItemLength % 2 == 1){ longestItemLength += 1;}
 
       String urgent = "URGENT";
       String notUrgent = "NOT URGENT";
       String important = "IMPORTANT";
       String notImportant = "NOT IMPORTANT";
 
+      // in case there is no todoitems or its' length is lower than length of shortest column header, width of table sets default to 20.
+      if (longestItemLength < urgent.length()) { longestItemLength = 20;}
+
       /* There it makes table header like:
 
         |            URGENT              |           NOT URGENT           |  
       --|--------------------------------|--------------------------------|--
 
-      It use repeat() function to justify - take length of longest item and subtract length of word wanted in header and divide it by 2
-      as we want to have the same number of spaces before this word and after it. It looks like: "space".repeat(...) + word + "space".repeat(...)' */
+      Program counts how many empty spaces must add before and after word Urgent and Not Urgent. Then uses repeat function to multiply empty spaces by proper number. */
 
-      String tableHeader = "  |" + " ".repeat((longestItemLength - urgent.length())/2) + urgent + " ".repeat((longestItemLength - urgent.length())/2) + "|"
-                   + " ".repeat((longestItemLength - notUrgent.length())/2) + notUrgent + " ".repeat((longestItemLength - notUrgent.length())/2) + "|\n"
-                   + "--|" + "-".repeat(longestItemLength) + "|" + "-".repeat(longestItemLength) + "|--\n";
+      StringBuilder tablestring = new StringBuilder();
 
-      /* There it makes rest of table. It looks similar as in table header but instead of word, we have the element of each quarter and
-      repeat() is only at the end because we want to justify to the left (and it is not divided by 2). 
+      int spacesCountHeaderUrgent = (longestItemLength - urgent.length())/2;
+      int spacesCountHeaderNotUrgent = (longestItemLength - notUrgent.length())/2;
+
+      if (longestItemLength < urgent.length()){ spacesCountHeaderUrgent = urgent.length();}
+      if (longestItemLength < notUrgent.length()){ spacesCountHeaderNotUrgent = notUrgent.length();}
+
+      tablestring.append("  |" + " ".repeat(spacesCountHeaderUrgent) + urgent + " ".repeat(spacesCountHeaderUrgent) + "|");
+      tablestring.append(" ".repeat(spacesCountHeaderNotUrgent) + notUrgent + " ".repeat(spacesCountHeaderNotUrgent) + "|\n");
+
+      String dividingLine = "--|" + "-".repeat(longestItemLength) + "|" + "-".repeat(longestItemLength) + "|--\n";
+
+      tablestring.append(dividingLine);
+
+      /* There it makes rest of table. It looks similar as in table header but instead of words, we have the element of each quarter. 
       
       I | 1. [ ] 9-6  go to the doctor   |1. [ ] 14-6 buy a ticket        |
       M |                                |2. [ ] 21-7 Ann birthday        |
       
       What's more, we print lines as much times as IMPORTANT word length because we print single characters every line on the left side 
-      (as in example I and M). It gives result of made two quarters UI and NI. */
+      (as in example I and M). It gives result of made UI quarter. */
 
-      String tableBodyImportant = "";
-      for (int index = 0; index < important.length(); index++){
-        try{
-          tableBodyImportant += important.charAt(index) + " |" + todoQuarters.get("UI").getItem(index).toString()
-                              + " ".repeat(longestItemLength - todoQuarters.get("UI").getItem(index).toString().length())
-                              + "|" + todoQuarters.get("NI").getItem(index)
-                              + " ".repeat(longestItemLength - todoQuarters.get("NI").getItem(index).toString().length()) + "|\n";
+      int uiSize = todoQuarters.get("UI").getItems().size();
+      int niSize = todoQuarters.get("NI").getItems().size();
+
+      // There it checks the height of row (UI and NI quarters). In case that list of quarters' todoItems is bigger than 
+      // length of word 'Important' program will print additional empty lines (withouth letters on beggining).
+      int firstRowHeight = Math.max(Math.max(important.length(), uiSize), niSize);
+
+      for (int i = 0; i < firstRowHeight; i++) {
+        appendIMPORTANTLetters(important, i, tablestring);
+        // here it checks if index (i) is not bigger or equal quarters' list size (checks if it can take that index from list)
+        if (i < uiSize) {
+          int spaceFiller = longestItemLength - todoQuarters.get("UI").getItem(i).toString().length();
+          tablestring.append(todoQuarters.get("UI").getItem(i).toString());
+          tablestring.append(" ".repeat(spaceFiller));
+          tablestring.append("|");
+        } else {
+          // while there is no more elements in that quarter
+          tablestring.append(" ".repeat(longestItemLength) + "|");
         }
-
-        // It must catch exceptions when we don't have an element on taken index. It allow program to check if there is element in another quarter.
-
-        catch(IndexOutOfBoundsException e){
-          try{
-            tableBodyImportant += important.charAt(index) + " |" + " ".repeat(longestItemLength)
-            + "|" + todoQuarters.get("NI").getItem(index) + " ".repeat(longestItemLength - todoQuarters.get("NI").getItem(index).toString().length()) + "|\n";
-          }
-
-          // Then situation repeats if another quarter have no element on that index, so then program prints empty lines.
-
-          catch(IndexOutOfBoundsException e2){
-            tableBodyImportant += important.charAt(index) + " |" + " ".repeat(longestItemLength) + "|" + " ".repeat(longestItemLength) + "|\n";
-          }
-        }
-      }
-      // This string dispart IMPORTANT and NOT IMPORTANT.
-      String dividerLine = "--|" + "-".repeat(longestItemLength) + "|" + "-".repeat(longestItemLength) + "|--\n";
-
-      // This part of code works the same as tableBodyImportant but it creates UN and NN quarters and prints NOT IMPORTANT on the left side.
-
-      String tableBodyNotImportant = "";
-      for (int index = 0; index < notImportant.length(); index++){
-        try{
-          tableBodyNotImportant += notImportant.charAt(index) + " |" + todoQuarters.get("UN").getItem(index).toString()
-                              + " ".repeat(longestItemLength - todoQuarters.get("UN").getItem(index).toString().length())
-                              + "|" + todoQuarters.get("NN").getItem(index)
-                              + " ".repeat(longestItemLength - todoQuarters.get("NN").getItem(index).toString().length()) + "|\n";
-        }
-        catch(IndexOutOfBoundsException f){
-          try{
-            tableBodyNotImportant += notImportant.charAt(index) + " |" + " ".repeat(longestItemLength)
-            + "|" + todoQuarters.get("NN").getItem(index) + " ".repeat(longestItemLength - todoQuarters.get("NN").getItem(index).toString().length()) + "|\n";
-          }
-          catch(IndexOutOfBoundsException f2){
-            tableBodyNotImportant += notImportant.charAt(index) + " |" + " ".repeat(longestItemLength) + "|" + " ".repeat(longestItemLength) + "|\n";
-          }
+        if (i < niSize){
+          int spaceFiller = longestItemLength - todoQuarters.get("NI").getItem(i).toString().length();
+          tablestring.append(todoQuarters.get("NI").getItem(i).toString());
+          tablestring.append(" ".repeat(spaceFiller));
+          tablestring.append("|\n");
+        } else {
+          // while there is no more elements in that quarter
+          tablestring.append(" ".repeat(longestItemLength) + "|\n");
         }
       }
-      /// endLine is closing table
-      String endLine = "--|" + "-".repeat(longestItemLength) + "|" + "-".repeat(longestItemLength) + "|--\n";
+      // Line diving Important and Not important
+      tablestring.append(dividingLine);
 
-      // There we adds every elements to one table.
-      String table = tableHeader + tableBodyImportant + dividerLine + tableBodyNotImportant + endLine;
-      return table;
+      // This part works the same. There is only quarter status changed
+
+      int unSize = todoQuarters.get("UN").getItems().size();
+      int nnSize = todoQuarters.get("NN").getItems().size();
+
+      int secondRowHeight = Math.max(Math.max(notImportant.length(), unSize), nnSize);
+
+      for (int i = 0; i < secondRowHeight; i++){
+        appendNOTIMPORTANTLetters(notImportant, i, tablestring);
+        if (i < unSize){
+          int spaceFiller = longestItemLength - todoQuarters.get("UN").getItem(i).toString().length();
+          tablestring.append(todoQuarters.get("UN").getItem(i).toString());
+          tablestring.append(" ".repeat(spaceFiller));
+          tablestring.append("|");
+        } else{
+          tablestring.append(" ".repeat(longestItemLength) + "|");
+        }
+        if (i < nnSize){
+          int spaceFiller = longestItemLength - todoQuarters.get("NN").getItem(i).toString().length();
+          tablestring.append(todoQuarters.get("NN").getItem(i).toString());
+          tablestring.append(" ".repeat(spaceFiller));
+          tablestring.append("|\n");
+        } else {
+          tablestring.append(" ".repeat(longestItemLength) + "|\n");
+        }
+      }
+      // Line closing table
+      tablestring.append(dividingLine);
+
+
+      return tablestring.toString();
+    }
+
+    private void appendIMPORTANTLetters(String important, int i, StringBuilder tableString){
+      if (i < important.length()) {
+        tableString.append(important.charAt(i));
+      } 
+      else {
+        tableString.append(" ");
+      }
+      tableString.append(" |");
+    }
+
+    private void appendNOTIMPORTANTLetters(String notImportant, int i, StringBuilder tableString){
+      if (i < notImportant.length()){
+        tableString.append(notImportant.charAt(i));
+      }
+      else {
+        tableString.append(" ");
+      }
+      tableString.append(" |");
     }
 }
