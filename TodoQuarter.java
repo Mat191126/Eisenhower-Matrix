@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /*### Class TodoQuarter
 
@@ -89,6 +90,7 @@ public class TodoQuarter{
     }
 
     public int findLongestItem(){
+      todoItems.sort(Comparator.comparing(TodoItem::getDeadline));
       int longestItemLength = 0;
       for (TodoItem todoItem : todoItems) {
           if (todoItem.toString().length() > longestItemLength){
