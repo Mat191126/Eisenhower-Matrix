@@ -134,7 +134,7 @@ public class Main {
                 break;
 
             case "9":
-                System.out.println(todoMatrix.toString());
+                System.out.println(todoMatrix.toStringTable());
                 userMenu(todoMatrix);
                 break;
 

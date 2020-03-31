@@ -87,4 +87,14 @@ public class TodoQuarter{
         }
         return todoQuarterString;
     }
+
+    public int findLongestItem(){
+      int longestItemLength = 0;
+      for (TodoItem todoItem : todoItems) {
+          if (todoItem.toString().length() > longestItemLength){
+            longestItemLength = todoItem.toString().length();
+          }
+      }
+      return longestItemLength;
+    }
 }

@@ -145,7 +145,7 @@ public class TodoMatrix{
             TodoQuarter todoQuarter = todoQuarters.get(status);
             for (TodoItem todoItem : todoQuarter.getItems()) {
               String line = String.format("%s|%d-%d|%s\n", todoItem.getTitle(), todoItem.getDeadline().getDayOfMonth(),
-                                         todoItem.getDeadline().getMonthValue(), status.charAt(0) == 'I' ? "important" : "");
+                                         todoItem.getDeadline().getMonthValue(), status.charAt(1) == 'I' ? "important" : "");
               writer.write(line);
             }
           }
@@ -171,5 +171,98 @@ public class TodoMatrix{
             todoQuarterString += todoQuarter.toString();
         }
         return todoQuarterString;
+    }
+
+    public String toStringTable() throws NullPointerException{
+      /* There program check which todoItem is the longest and returns it's length. Then we check if
+      it's even because we need it further when divide by 2 to center text. */
+      int longestItemLength = 0;
+      for (String key : todoQuarters.keySet()) {
+          TodoQuarter todoQuarter = todoQuarters.get(key);
+          longestItemLength = todoQuarter.findLongestItem();
+      }
+      if (longestItemLength % 2 == 1){
+        longestItemLength += 1;
+      }
+
+      String urgent = "URGENT";
+      String notUrgent = "NOT URGENT";
+      String important = "IMPORTANT";
+      String notImportant = "NOT IMPORTANT";
+
+      /* There it makes table header like:
+
+        |            URGENT              |           NOT URGENT           |  
+      --|--------------------------------|--------------------------------|--
+
+      It use repeat() function to justify - take length of longest item and subtract length of word wanted in header and divide it by 2
+      as we want to have the same number of spaces before this word and after it. It looks like: "space".repeat(...) + word + "space".repeat(...)' */
+
+      String tableHeader = "  |" + " ".repeat((longestItemLength - urgent.length())/2) + urgent + " ".repeat((longestItemLength - urgent.length())/2) + "|"
+                   + " ".repeat((longestItemLength - notUrgent.length())/2) + notUrgent + " ".repeat((longestItemLength - notUrgent.length())/2) + "|\n"
+                   + "--|" + "-".repeat(longestItemLength) + "|" + "-".repeat(longestItemLength) + "|--\n";
+
+      /* There it makes rest of table. It looks similar as in table header but instead of word, we have the element of each quarter and
+      repeat() is only at the end because we want to justify to the left (and it is not divided by 2). 
+      
+      I | 1. [ ] 9-6  go to the doctor   |1. [ ] 14-6 buy a ticket        |
+      M |                                |2. [ ] 21-7 Ann birthday        |
+      
+      What's more, we print lines as much times as IMPORTANT word length because we print single characters every line on the left side 
+      (as in example I and M). It gives result of made two quarters UI and NI. */
+
+      String tableBodyImportant = "";
+      for (int index = 0; index < important.length(); index++){
+        try{
+          tableBodyImportant += important.charAt(index) + " |" + todoQuarters.get("UI").getItem(index).toString()
+                              + " ".repeat(longestItemLength - todoQuarters.get("UI").getItem(index).toString().length())
+                              + "|" + todoQuarters.get("NI").getItem(index)
+                              + " ".repeat(longestItemLength - todoQuarters.get("NI").getItem(index).toString().length()) + "|\n";
+        }
+
+        // It must catch exceptions when we don't have an element on taken index. It allow program to check if there is element in another quarter.
+
+        catch(IndexOutOfBoundsException e){
+          try{
+            tableBodyImportant += important.charAt(index) + " |" + " ".repeat(longestItemLength)
+            + "|" + todoQuarters.get("NI").getItem(index) + " ".repeat(longestItemLength - todoQuarters.get("NI").getItem(index).toString().length()) + "|\n";
+          }
+
+          // Then situation repeats if another quarter have no element on that index, so then program prints empty lines.
+
+          catch(IndexOutOfBoundsException e2){
+            tableBodyImportant += important.charAt(index) + " |" + " ".repeat(longestItemLength) + "|" + " ".repeat(longestItemLength) + "|\n";
+          }
+        }
+      }
+      // This string dispart IMPORTANT and NOT IMPORTANT.
+      String dividerLine = "--|" + "-".repeat(longestItemLength) + "|" + "-".repeat(longestItemLength) + "|--\n";
+
+      // This part of code works the same as tableBodyImportant but it creates UN and NN quarters and prints NOT IMPORTANT on the left side.
+
+      String tableBodyNotImportant = "";
+      for (int index = 0; index < notImportant.length(); index++){
+        try{
+          tableBodyNotImportant += notImportant.charAt(index) + " |" + todoQuarters.get("UN").getItem(index).toString()
+                              + " ".repeat(longestItemLength - todoQuarters.get("UN").getItem(index).toString().length())
+                              + "|" + todoQuarters.get("NN").getItem(index)
+                              + " ".repeat(longestItemLength - todoQuarters.get("NN").getItem(index).toString().length()) + "|\n";
+        }
+        catch(IndexOutOfBoundsException f){
+          try{
+            tableBodyNotImportant += notImportant.charAt(index) + " |" + " ".repeat(longestItemLength)
+            + "|" + todoQuarters.get("NN").getItem(index) + " ".repeat(longestItemLength - todoQuarters.get("NN").getItem(index).toString().length()) + "|\n";
+          }
+          catch(IndexOutOfBoundsException f2){
+            tableBodyNotImportant += notImportant.charAt(index) + " |" + " ".repeat(longestItemLength) + "|" + " ".repeat(longestItemLength) + "|\n";
+          }
+        }
+      }
+      /// endLine is closing table
+      String endLine = "--|" + "-".repeat(longestItemLength) + "|" + "-".repeat(longestItemLength) + "|--\n";
+
+      // There we adds every elements to one table.
+      String table = tableHeader + tableBodyImportant + dividerLine + tableBodyNotImportant + endLine;
+      return table;
     }
 }
