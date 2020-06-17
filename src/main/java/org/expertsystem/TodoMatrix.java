@@ -77,7 +77,7 @@ public class TodoMatrix {
                 TodoQuarter todoQuarter = todoQuarters.get(status);
                 for (TodoItem todoItem : todoQuarter.getItems()) {
                     String line = String.format("%s|%d-%d|%s\n", todoItem.getTitle(), todoItem.getDeadline().getDayOfMonth(),
-                            todoItem.getDeadline().getMonthValue(), status.charAt(1) == 'I' ? "important" : "");
+                            todoItem.getDeadline().getMonthValue(), status.charAt(0) == 'I' ? "important" : "");
                     writer.write(line);
                 }
             }
@@ -155,8 +155,8 @@ public class TodoMatrix {
       What's more, we print lines as much times as IMPORTANT word length because we print single characters every line on the left side
       (as in example I and M). It gives result of made UI quarter. */
 
-        int uiSize = todoQuarters.get("UI").getItems().size();
-        int niSize = todoQuarters.get("NI").getItems().size();
+        int uiSize = todoQuarters.get("IU").getItems().size();
+        int niSize = todoQuarters.get("IN").getItems().size();
 
         // There it checks the height of row (UI and NI quarters). In case that list of quarters' todoItems is bigger than
         // length of word 'Important' program will print additional empty lines (withouth letters on beggining).
@@ -166,8 +166,8 @@ public class TodoMatrix {
             appendIMPORTANTLetters(important, i, tablestring);
             // here it checks if index (i) is not bigger or equal quarters' list size (checks if it can take that index from list)
             if (i < uiSize) {
-                int spaceFiller = longestItemLength - todoQuarters.get("UI").getItem(i).toString().length();
-                tablestring.append(todoQuarters.get("UI").getItem(i).toString());
+                int spaceFiller = longestItemLength - todoQuarters.get("IU").getItem(i).toString().length();
+                tablestring.append(todoQuarters.get("IU").getItem(i).toString());
                 tablestring.append(" ".repeat(spaceFiller));
                 tablestring.append("|");
             } else {
@@ -175,8 +175,8 @@ public class TodoMatrix {
                 tablestring.append(" ".repeat(longestItemLength) + "|");
             }
             if (i < niSize){
-                int spaceFiller = longestItemLength - todoQuarters.get("NI").getItem(i).toString().length();
-                tablestring.append(todoQuarters.get("NI").getItem(i).toString());
+                int spaceFiller = longestItemLength - todoQuarters.get("IN").getItem(i).toString().length();
+                tablestring.append(todoQuarters.get("IN").getItem(i).toString());
                 tablestring.append(" ".repeat(spaceFiller));
                 tablestring.append("|\n");
             } else {
@@ -189,7 +189,7 @@ public class TodoMatrix {
 
         // This part works the same. There is only quarter status changed
 
-        int unSize = todoQuarters.get("UN").getItems().size();
+        int unSize = todoQuarters.get("NU").getItems().size();
         int nnSize = todoQuarters.get("NN").getItems().size();
 
         int secondRowHeight = Math.max(Math.max(notImportant.length(), unSize), nnSize);
@@ -197,8 +197,8 @@ public class TodoMatrix {
         for (int i = 0; i < secondRowHeight; i++){
             appendNOTIMPORTANTLetters(notImportant, i, tablestring);
             if (i < unSize){
-                int spaceFiller = longestItemLength - todoQuarters.get("UN").getItem(i).toString().length();
-                tablestring.append(todoQuarters.get("UN").getItem(i).toString());
+                int spaceFiller = longestItemLength - todoQuarters.get("NU").getItem(i).toString().length();
+                tablestring.append(todoQuarters.get("NU").getItem(i).toString());
                 tablestring.append(" ".repeat(spaceFiller));
                 tablestring.append("|");
             } else{
