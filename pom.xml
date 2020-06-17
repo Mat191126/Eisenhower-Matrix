@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>expertSystem</artifactId>
+    <artifactId>eisenhowerMatrix</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <name>eisenhowerMatrix</name>
@@ -25,6 +25,13 @@
             <version>4.11</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-console-standalone</artifactId>
+            <version>1.6.2</version>
+            <scope>test</scope>
+        </dependency>
+
 
     </dependencies>
 

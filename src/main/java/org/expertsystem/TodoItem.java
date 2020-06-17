@@ -30,6 +30,10 @@ public class TodoItem {
         isDone = false;
     }
 
+    public boolean isDone() {
+        return isDone;
+    }
+
     public String toString(){
         String markCharacter = isDone ? "x" : " ";
         int day = deadline.getDayOfMonth();

@@ -1,9 +1,10 @@
-buy disc|21-4|
-make pie|23-4|
-call mum|24-4|
 write new post|30-6|
 make doctor apointment|2-4|important
 end project|3-4|important
-go to aunt|2-4|
 buy ticket|23-4|important
 go walk|23-4|important
+go to aunt|2-4|
+buy disc|21-4|
+make pie|23-4|
+call mum|24-4|
+go to park|12-9|important
