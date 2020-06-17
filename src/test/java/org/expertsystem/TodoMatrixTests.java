@@ -81,8 +81,8 @@ class TodoMatrixTests {
 
     @Test
     void testSaveItemsToFile() throws IOException {
-        String fileIn = "/home/mikolaj/IdeaProjects/eisenhower-matrix-mikolajurbanek/src/test/java/todo_items_read_test.csv";
-        String fileOut = "/home/mikolaj/IdeaProjects/eisenhower-matrix-mikolajurbanek/src/test/java/todo_items_save_test.csv";
+        String fileIn = "todo_items_read_test.csv";
+        String fileOut = "todo_items_save_test.csv";
 
         this.todoMatrix.addItemsFromFile(fileIn);
         this.todoMatrix.saveItemsToFile(fileOut);
