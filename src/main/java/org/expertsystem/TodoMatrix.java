@@ -9,10 +9,10 @@ public class TodoMatrix {
 
     public TodoMatrix(){
         todoQuarters = new HashMap<>();
-        todoQuarters.put("UI", new TodoQuarter());
-        todoQuarters.put("NI", new TodoQuarter());
+        todoQuarters.put("IU", new TodoQuarter());
+        todoQuarters.put("IN", new TodoQuarter());
         todoQuarters.put("NN", new TodoQuarter());
-        todoQuarters.put("UN", new TodoQuarter());
+        todoQuarters.put("NU", new TodoQuarter());
     }
 
     public HashMap<String, TodoQuarter> getQuarters(){
@@ -31,7 +31,7 @@ public class TodoMatrix {
 
         String statusImportant = isImportant ? "I" : "N";
         String statusUrgent = isUrgent ? "U" : "N";
-        String status = statusUrgent + statusImportant;
+        String status = statusImportant + statusUrgent;
 
         if (todoQuarters.containsKey(status)){
             getQuarter(status).addItem(title, deadline);
@@ -39,6 +39,7 @@ public class TodoMatrix {
         }
 
         getQuarter(status).addItem(title, deadline);
+        sortQuarters();
     }
 
     public void addItemsFromFile(String fileName) {
@@ -60,6 +61,7 @@ public class TodoMatrix {
 
                 addItem(title, deadline, isImportant);
             }
+            sortQuarters();
         } catch (Exception e) {
             System.out.println("Can't read file");
         }
@@ -236,5 +238,12 @@ public class TodoMatrix {
             tableString.append(" ");
         }
         tableString.append(" |");
+    }
+
+    private void sortQuarters(){
+        for (String quarterName : todoQuarters.keySet()){
+            TodoQuarter todoQuarter = todoQuarters.get(quarterName);
+            todoQuarter.sortTodoItems();
+        }
     }
 }

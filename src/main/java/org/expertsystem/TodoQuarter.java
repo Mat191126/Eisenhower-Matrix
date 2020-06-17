@@ -16,6 +16,7 @@ public class TodoQuarter {
         TodoItem todoItem = new TodoItem(title, deadline);
 
         todoItems.add(todoItem);
+        sortTodoItems();
     }
 
     public void removeItem(int index){
@@ -59,5 +60,22 @@ public class TodoQuarter {
         }
 
         return longestItemLength;
+    }
+
+    public void sortTodoItems(){
+        boolean sorted = false;
+        TodoItem temp;
+        while(!sorted) {
+            sorted = true;
+            for (int itemIndex = 0; itemIndex < todoItems.size() - 1; itemIndex++) {
+
+                if (todoItems.get(itemIndex).getDeadline().isAfter(todoItems.get(itemIndex + 1).getDeadline())) {
+                    temp = todoItems.get(itemIndex);
+                    todoItems.set(itemIndex, todoItems.get(itemIndex + 1));
+                    todoItems.set(itemIndex + 1, temp);
+                    sorted = false;
+                }
+            }
+        }
     }
 }

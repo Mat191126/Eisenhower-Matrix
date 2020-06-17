@@ -88,7 +88,7 @@ public class Program {
     private void markItem(){
         System.out.println(todoMatrix.toString());
         try{
-            String statusFromUser = inputProvider.takeInputFromUser("Choose quarter name (UI/NI/UN/NN): ");
+            String statusFromUser = inputProvider.takeInputFromUser("Choose quarter name (IU/IN/NU/NN): ");
             String indexFromUser = inputProvider.takeInputFromUser("Enter number of item to mark: ");
             int indexFromUserInteger = Integer.parseInt(indexFromUser);
             if (indexFromUserInteger -1 >= todoMatrix.getQuarter(statusFromUser).getItems().size()){
@@ -105,7 +105,7 @@ public class Program {
     private void unmarkItem(){
         System.out.println(todoMatrix.toString());
         try{
-            String statusFromUserB = inputProvider.takeInputFromUser("Choose quarter name (UI/NI/UN/NN): ");
+            String statusFromUserB = inputProvider.takeInputFromUser("Choose quarter name (IU/IN/NU/NN): ");
             String indexFromUserB = inputProvider.takeInputFromUser("Enter number of item to unmark: ");
             int indexFromUserIntegerB = Integer.parseInt(indexFromUserB);
             if (indexFromUserIntegerB -1 >= todoMatrix.getQuarter(statusFromUserB).getItems().size()){
@@ -122,7 +122,7 @@ public class Program {
     private void removeItem(){
         System.out.println(todoMatrix.toString());
         try{
-            String statusFromUserC = inputProvider.takeInputFromUser("Choose quarter name (UI/NI/UN/NN): ");
+            String statusFromUserC = inputProvider.takeInputFromUser("Choose quarter name (IU/IN/NU/NN): ");
             String indexFromUserC = inputProvider.takeInputFromUser("Enter number of item to remove: ");
             int indexFromUserIntegerC = Integer.parseInt(indexFromUserC);
             if (indexFromUserIntegerC -1 >= todoMatrix.getQuarter(statusFromUserC).getItems().size()){
@@ -138,7 +138,7 @@ public class Program {
 
     private void showChosenStatus(){
         try{
-            String statusFromUserD = inputProvider.takeInputFromUser("Choose quarter name (UI/NI/UN/NN): ");
+            String statusFromUserD = inputProvider.takeInputFromUser("Choose quarter name (IU/IN/NU/NN): ");
             System.out.println("\nStatus: " + statusFromUserD);
             System.out.println(todoMatrix.getQuarter(statusFromUserD).toString());
         }
