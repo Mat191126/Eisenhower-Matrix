@@ -1,4 +1,4 @@
-package org.expertsystem;
+package org.eisenhowermatrix;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

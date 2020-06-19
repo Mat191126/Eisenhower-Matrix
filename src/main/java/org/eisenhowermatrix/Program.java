@@ -1,7 +1,7 @@
-package org.expertsystem;
+package org.eisenhowermatrix;
 
-import org.expertsystem.tools.DataPrint;
-import org.expertsystem.tools.InputProvider;
+import org.eisenhowermatrix.tools.DataPrint;
+import org.eisenhowermatrix.tools.InputProvider;
 
 import java.io.IOException;
 import java.time.LocalDate;

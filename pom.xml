@@ -56,7 +56,7 @@
                         <index>true</index>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>org.expertsystem.App</mainClass>
+                            <mainClass>org.eisenhowermatrix.App</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -1,4 +1,4 @@
-package org.expertsystem;
+package org.eisenhowermatrix;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -76,7 +76,7 @@ public class TodoMatrix {
             for (String status : todoQuarters.keySet()) {
                 TodoQuarter todoQuarter = todoQuarters.get(status);
                 for (TodoItem todoItem : todoQuarter.getItems()) {
-                    String line = String.format("%s|%d-%d|%s\n", todoItem.getTitle(), todoItem.getDeadline().getDayOfMonth(),
+                    String line = String.format("%s |%d-%d| %s\n", todoItem.getTitle(), todoItem.getDeadline().getDayOfMonth(),
                             todoItem.getDeadline().getMonthValue(), status.charAt(0) == 'I' ? "important" : "");
                     writer.write(line);
                 }
